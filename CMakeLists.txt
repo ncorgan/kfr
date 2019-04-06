@@ -78,7 +78,7 @@ if (CPU_ARCH STREQUAL "detect" AND X86)
             RUN_RESULT COMPILE_RESULT
             "${CMAKE_BINARY_DIR}/tmpdir"
             ${CMAKE_CURRENT_SOURCE_DIR}/cmake/detect_cpu.cpp
-            CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${CMAKE_SOURCE_DIR}/include" -DCMAKE_CXX_STANDARD=14
+            CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${CMAKE_CURRENT_SOURCE_DIR}/include" -DCMAKE_CXX_STANDARD=14
             -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=ON
             COMPILE_OUTPUT_VARIABLE COMPILE_OUT
             RUN_OUTPUT_VARIABLE RUN_OUT
@@ -170,18 +170,21 @@ if (ENABLE_DFT)
     if (MSVC)
         target_compile_options(kfr_dft PRIVATE -fp:fast)
     else()
-        target_compile_options(kfr_dft PRIVATE -ffast-math)
+        target_compile_options(kfr_dft PRIVATE -ffast-math -fPIC)
     endif()
 endif()
 
 add_library(kfr_io ${KFR_IO_SRC})
 target_link_libraries(kfr_io kfr)
 target_compile_definitions(kfr_io PUBLIC KFR_ENABLE_FLAC=1)
+if(NOT MSVC)
+    target_compile_options(kfr_io PRIVATE -fPIC)
+endif()
 
-install(TARGETS kfr kfr_io ARCHIVE DESTINATION lib)
+#install(TARGETS kfr kfr_io ARCHIVE DESTINATION lib)
 
-if (ENABLE_DFT)
-    install(TARGETS kfr_dft ARCHIVE DESTINATION lib)
-endif ()
+#if (ENABLE_DFT)
+#    install(TARGETS kfr_dft ARCHIVE DESTINATION lib)
+#endif ()
 
-install(DIRECTORY include/kfr DESTINATION include)
+#install(DIRECTORY include/kfr DESTINATION include)
