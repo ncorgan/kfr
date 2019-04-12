@@ -1086,7 +1086,7 @@ void dft_plan_real<T>::from_fmt(complex<T>* out, const complex<T>* in, dft_pack_
 {
     using namespace intrinsics;
 
-    const size_t csize = this->size / 2;
+    size_t csize = this->size / 2;
 
     cvec<T, 1> dc;
 
